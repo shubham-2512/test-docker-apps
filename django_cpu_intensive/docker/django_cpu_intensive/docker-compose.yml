@@ -3,6 +3,6 @@ services:
   cpu_intensive:
     build:
       context: ../..  # The context is the current directory
-      dockerfile: docker/cpu_intensive/service.Dockerfile  # Use the Dockerfile in the current directory
+      dockerfile: ../django_cpu_intensive/docker/django_cpu_intensive/service.Dockerfile  # Use the Dockerfile in the current directory
     ports:
       - "8002:8002"  # Map host port 8002 to container port 8002

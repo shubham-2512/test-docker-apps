@@ -1,8 +1,5 @@
-# main.py
-from fastapi import FastAPI
+from django.http import JsonResponse
 import concurrent.futures
-
-app = FastAPI()
 
 
 def is_prime(n):
@@ -20,36 +17,24 @@ def is_prime(n):
     return True
 
 
-@app.get("/calculate_primes/{end}")
-def calculate_primes_endpoint(end):
-    print(f"Got the Request")
+def calculate_primes(request, end):
     start = 1
     end = int(end)
     prime_count = sum(1 for x in range(start, end + 1) if is_prime(x))
+    return JsonResponse({"prime_count": prime_count})
 
-    return {"prime_count": prime_count}
 
-
-@app.get("/calculate_primes/concurrent/{end}")
-def calculate_primes_endpoint(end):
-    print(f"Got the Request")
+def calculate_primes_concurrent(request, end):
     start = 1
     end = int(end)
-    # Using ThreadPoolExecutor for concurrency
     with concurrent.futures.ThreadPoolExecutor() as executor:
         prime_count = sum(executor.map(is_prime, range(start, end + 1)))
+    return JsonResponse({"prime_count": prime_count})
 
-    return {"prime_count": prime_count}
 
-@app.get("/calculate_primes/parallel/{end}")
-def calculate_primes_parallel_endpoint(end):
-    print(f"Got the Request")
-
+def calculate_primes_parallel(request, end):
     start = 1
     end = int(end)
-
-    # Using ProcessPoolExecutor for parallelism
     with concurrent.futures.ProcessPoolExecutor() as executor:
         prime_count = sum(executor.map(is_prime, range(start, end + 1)))
-
-    return {"prime_count": prime_count}
+    return JsonResponse({"prime_count": prime_count})
